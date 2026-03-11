@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import classRouter from './routes/class';
 import subjectRouter from './routes/subject';
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(cors({
 
 app.use(express.json());
 
+app.use('/api/classes', classRouter)
 app.use('/api/subjects', subjectRouter)
 
 app.get('/', (req, res) => {

@@ -15,6 +15,13 @@
       "when": 1772759060865,
       "tag": "0001_mature_photon",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1773227915766,
+      "tag": "0002_harsh_namorita",
+      "breakpoints": true
     }
   ]
 }

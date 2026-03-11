@@ -8,6 +8,14 @@ const timestamps = {
 }
 
 export const classStatusEnum = pgEnum('class_status', ['active', 'inactive', 'archived']);
+export type ClassStatus = (typeof classStatusEnum.enumValues)[number];
+
+export interface Schedule {
+    day: string;
+    startTime: string;
+    endTime: string;
+    location?: string;
+}
 
 export const departments = pgTable('departments', {
     id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
@@ -28,29 +36,41 @@ export const subjects = pgTable('subjects', {
     index("department_id_idx").on(table.departmentId),
 ]);
 
-export const classes = pgTable('classes', {
-    id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-    subjectId: integer('subject_id').notNull().references(() => subjects.id, { onDelete: 'cascade' }),
-    teacherId: text('teacher_id').notNull().references(() => user.id, { onDelete: 'restrict' }),
-    inviteCode: varchar('invite_code', { length: 255 }).notNull(),
-    name: varchar('name', { length: 255 }).notNull(),
-    bannerCldPubId: text('banner_cld_pub_id'),
-    bannerUrl: text('banner_url'),
-    description: text('description'),
-    capacity: integer('capacity').default(50).notNull(),
-    status: classStatusEnum('status').default('active').notNull(),
-    schedules: jsonb('schedules').$type<Record<string, unknown>[]>().default([]).notNull(),
+export const classes = pgTable(
+  "classes",
+  {
+    id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+    subjectId: integer("subject_id")
+      .notNull()
+      .references(() => subjects.id, { onDelete: "cascade" }),
+    teacherId: text("teacher_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "restrict" }),
+    inviteCode: varchar("invite_code", { length: 255 }).notNull(),
+    name: varchar("name", { length: 255 }).notNull(),
+    bannerCldPubId: text("banner_cld_pub_id"),
+    bannerUrl: text("banner_url"),
+    description: text("description"),
+    capacity: integer("capacity").default(50).notNull(),
+    status: classStatusEnum("status").default("active").notNull(),
+    schedules: jsonb("schedules")
+      .$type<Schedule[]>()
+      .default([])
+      .notNull(),
     ...timestamps,
-}, (table) => [
-    index('classes_subject_id_idx').on(table.subjectId),
-    index('classes_teacher_id_idx').on(table.teacherId),
-    uniqueIndex('classes_invite_code_unique').on(table.inviteCode),
-]);
+  },
+  (table) => [
+    index("classes_subject_id_idx").on(table.subjectId),
+    index("classes_teacher_id_idx").on(table.teacherId),
+    uniqueIndex("classes_invite_code_unique").on(table.inviteCode),
+  ]
+);
 
 export const enrollments = pgTable('enrollments', {
     id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
     studentId: text('student_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
     classId: integer('class_id').notNull().references(() => classes.id, { onDelete: 'cascade' }),
+    ...timestamps,
 }, (table) => [
     index('enrollments_student_id_idx').on(table.studentId),
     index('enrollments_class_id_idx').on(table.classId),

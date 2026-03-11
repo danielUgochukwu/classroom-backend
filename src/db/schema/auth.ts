@@ -20,7 +20,7 @@ export const user = pgTable('user', {
     id: text('id').primaryKey(),
     name: text('name').notNull(),
     email: text('email').notNull(),
-    emailVerified: boolean('email_verified').notNull(),
+    emailVerified: boolean('email_verified').default(false).notNull(),
     image: text('image'),
     role: roleEnum('role').default('student').notNull(),
     imageCldPubId: text('image_cld_pub_id'),
@@ -33,7 +33,8 @@ export const session = pgTable('session', {
     id: text('id').primaryKey(),
     expiresAt: timestamp('expires_at').notNull(),
     token: text('token').notNull(),
-    ipAddress: text('ip_address'),
+    // Stores a salted hash of the client IP, never the raw IP string.
+    ipHash: text('ip_address'),
     userAgent: text('user_agent'),
     userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
     ...timestamps,
@@ -47,12 +48,16 @@ export const account = pgTable('account', {
     accountId: text('account_id').notNull(),
     providerId: text('provider_id').notNull(),
     userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+    // Encrypted at rest by src/db/account.ts helpers.
     accessToken: text('access_token'),
+    // Encrypted at rest by src/db/account.ts helpers.
     refreshToken: text('refresh_token'),
+    // Encrypted at rest by src/db/account.ts helpers.
     idToken: text('id_token'),
     accessTokenExpiresAt: timestamp('access_token_expires_at'),
     refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
     scope: text('scope'),
+    // Stores a one-way password hash, never plaintext.
     password: text('password'),
     ...timestamps,
 }, (table) => [
