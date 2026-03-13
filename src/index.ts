@@ -3,6 +3,7 @@ import cors from 'cors';
 import classRouter from './routes/class';
 import subjectRouter from './routes/subject';
 import securityMiddleware from './middleware/security';
+import identityMiddleware from './middleware/identity';
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -21,10 +22,11 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use(securityMiddleware)
+app.use(identityMiddleware);
+app.use(securityMiddleware);
 
-app.use('/api/classes', classRouter)
-app.use('/api/subjects', subjectRouter)
+app.use('/api/classes', classRouter);
+app.use('/api/subjects', subjectRouter);
 
 app.get('/', (req, res) => {
     res.json({ message: 'Classroom Management API' });
