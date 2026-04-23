@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import express from "express";
 import { db } from "../db/index.js";
 import { classes, classStatusEnum, subjects, user, type ClassStatus, type Schedule } from "../db/schema/app.js";
-import type { CreateClassDto, UpdateClassDto } from "./class.dto";
+import type { CreateClassDto, UpdateClassDto } from "./class.dto.js";
 
 const router = express.Router();
 

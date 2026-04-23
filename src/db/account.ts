@@ -1,12 +1,12 @@
 import { and, eq } from "drizzle-orm";
-import { db } from "./index";
+import { db } from "./index.js";
 import { account } from "./schema/auth.js";
 import {
     decryptTokenAtRest,
     encryptTokenAtRest,
     hashPassword,
     isPasswordHash,
-} from "../security/secret-protection";
+} from "../security/secret-protection.js";
 
 const encryptOptionalToken = (token?: string | null): string | null => {
     if (token === undefined || token === null) {

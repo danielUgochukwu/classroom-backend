@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import type { NextFunction, Request, Response } from "express";
-import { db } from "../db";
-import { getSessionByToken } from "../db/session";
+import { db } from "../db/index.js";
+import { getSessionByToken } from "../db/session.js";
 import { user } from "../db/schema/auth.js";
 
 const extractBearerToken = (authorizationHeader?: string): string | null => {

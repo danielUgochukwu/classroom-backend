@@ -8,7 +8,7 @@ import subjectRouter from './routes/subjects.js';
 import securityMiddleware from './middleware/security.js';
 import identityMiddleware from './middleware/identity.js';
 import { toNodeHandler } from 'better-auth/node';
-import { auth } from './lib/auth';
+import { auth } from './lib/auth.js';
 
 const app = express();
 const port = process.env.PORT || 8000;
