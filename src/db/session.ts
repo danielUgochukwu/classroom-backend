@@ -1,7 +1,7 @@
 import { createHmac } from "node:crypto";
 import { eq } from "drizzle-orm";
-import { db } from "./index";
-import { session } from "./schema";
+import { db } from "./index.js";
+import { session } from "./schema/auth.js";
 import { decryptTokenAtRest, encryptIndexedTokenAtRest } from "../security/secret-protection";
 
 const getSessionIpHashSalt = (): string => {

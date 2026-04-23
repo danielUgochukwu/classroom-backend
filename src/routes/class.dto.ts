@@ -1,4 +1,4 @@
-import type { ClassStatus, Schedule } from "../db/schema";
+import type { ClassStatus, Schedule } from "../db/schema/app.js";
 
 export interface CreateClassDto {
     subjectId: number;

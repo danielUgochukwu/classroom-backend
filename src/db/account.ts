@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "./index";
-import { account } from "./schema";
+import { account } from "./schema/auth.js";
 import {
     decryptTokenAtRest,
     encryptTokenAtRest,
