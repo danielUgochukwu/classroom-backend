@@ -11,13 +11,16 @@ import { toNodeHandler } from 'better-auth/node';
 import { auth } from './lib/auth.js';
 
 const app = express();
-const port = process.env.PORT || 8000;
+const port = Number(process.env.PORT) || 8000;
+const host = process.env.HOST || '0.0.0.0';
 
 const frontendUrl = process.env.FRONTEND_URL;
 
 if (!frontendUrl) {
     throw new Error('FRONTEND_URL must be set to an allowed origin');
 }
+
+app.set('trust proxy', 1);
 
 app.use(cors({
     origin: frontendUrl,
@@ -29,16 +32,19 @@ app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use(express.json());
 
+app.get('/health', (_req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
+
+app.get('/', (_req, res) => {
+    res.status(200).json({ message: 'Classroom Management API' });
+});
+
 app.use(identityMiddleware);
 app.use(securityMiddleware);
 
 app.use('/api/classes', classRouter);
 app.use('/api/subjects', subjectRouter);
-
-app.get('/', (req, res) => {
-    res.json({ message: 'Classroom Management API' });
-});
-
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+app.listen(port, host, () => {
+    console.log(`Server is running on ${host}:${port}`);
 });
