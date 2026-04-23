@@ -1,5 +1,5 @@
 import { ArcjetRequest, slidingWindow } from "@arcjet/node";
-import aj from "../config/arcjet";
+import aj from "../config/arcjet.js";
 import { isSpoofedBot } from "@arcjet/inspect";
 import type { Request, Response, NextFunction } from "express";
 

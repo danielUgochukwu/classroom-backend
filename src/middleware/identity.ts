@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import type { NextFunction, Request, Response } from "express";
 import { db } from "../db";
 import { getSessionByToken } from "../db/session";
-import { user } from "../db/schema";
+import { user } from "../db/schema/auth.js";
 
 const extractBearerToken = (authorizationHeader?: string): string | null => {
     if (!authorizationHeader) {
