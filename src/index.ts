@@ -3,6 +3,9 @@ import cors from 'cors';
 import classRouter from './routes/class';
 import subjectRouter from './routes/subject';
 import securityMiddleware from './middleware/security';
+import identityMiddleware from './middleware/identity';
+import { toNodeHandler } from 'better-auth/node';
+import { auth } from './lib/auth';
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -19,12 +22,15 @@ app.use(cors({
     credentials: true,
 }));
 
+app.all("/api/auth/*splat", toNodeHandler(auth));
+
 app.use(express.json());
 
-app.use(securityMiddleware)
+app.use(identityMiddleware);
+app.use(securityMiddleware);
 
-app.use('/api/classes', classRouter)
-app.use('/api/subjects', subjectRouter)
+app.use('/api/classes', classRouter);
+app.use('/api/subjects', subjectRouter);
 
 app.get('/', (req, res) => {
     res.json({ message: 'Classroom Management API' });
